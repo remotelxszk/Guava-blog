@@ -1,0 +1,39 @@
+{% extends "blog/base.html" %}
+{% load bootstrap3 %}
+
+
+{% block header %}
+  <div class="jumbotron">
+    <h1>Guava Blogging Stronka :P</h1>
+    <h5>&nbsp;&nbsp;ver: 1.6.0 Pages</h5>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <h2>
+    Blog Posts
+  </h2>
+  <h3>
+    {% if user.is_authenticated %} <a href="{% url 'blog:new_post' %}" class="btn btn-info">Add a new Blog Post</a>
+    {% else %} <a href="{% url 'blog:new_post' %}" class="btn btn-info">Log in to add a new Blog Post</a>
+    {% endif %}
+  </h3>
+  {% for blog in blogs %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>
+          <a href="{% url 'blog:view_post' blog.id %}">{{ blog }}</a>
+        </h2>
+        <small>
+          <p>Posted by: <b>{{ blog.owner }}</b> on <i>{{ blog.date_added }}</i> Number of comments: {{ blog.postcomment_set.all.count }} {% if user == blog.owner %} <a href="{% url 'blog:edit_post' blog.id %}" class="text-success">edit post</a> <a href="{% url 'blog:delete_post' blog.id %}" class="text-danger">delete post</a> {% endif %}</p>
+        </small>
+      </div>
+      <div class="panel-body crop">
+        &nbsp;{{ blog.text|urlize }}
+      </div>
+    </div><!-- panel -->
+  {% empty %}
+    No Blog Posts have been added yet.
+  {% endfor %}
+  {% include "blog/pagination.html" with page=blogs %}
+{% endblock content %}

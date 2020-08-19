@@ -1,0 +1,38 @@
+{% extends "blog/base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+  <p>Blog </p>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2>
+        <p>{{ blog }}</p>
+      </h2>
+      <small>
+        <p>Posted by: <b>{{ blog.owner }}</b> on {{ blog.date_added }}{% if user == blog.owner %} <a href="{% url 'blog:edit_post' blog.id %}" class="text-success">edit post</a> <a href="{% url 'blog:delete_post' blog.id %}" class="text-danger">delete post</a> {% endif %}</p>
+      </small>
+    </div>
+    <div class="panel-body crop">
+      &nbsp;{{ blog.text|urlize }}
+    </div>
+  </div><!-- panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3>
+        <p>Comments: <a href="{% url 'blog:new_comment' blog.id %}" class="btn btn-primary btn pull-right">Add a new comment</a></p>
+      </h3>
+    </div>
+    {% for comment in comments %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <small> <p>&nbsp;Written by: <b>{{ comment.owner }}</b> on {{ comment.date_added }}{% if user == comment.owner %} <a href="{% url 'blog:edit_comment' blog.id comment.id %}" class="text-success">edit comment</a> <a href="{% url 'blog:delete_comment' blog.id comment.id %}" class="text-danger">delete comment</a> {% endif %}</p> </small>
+        </div>
+        <h5>&nbsp;&nbsp;&nbsp;{{ comment.text|urlize }}</h5>
+      </div>
+    {% empty %}
+     &nbsp;&nbsp;&nbsp;There are no comments yet for this post.
+    {% endfor %}
+  </div>
+{% endblock content %}
